@@ -1,11 +1,12 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const mongo = require('./mongo');
 require('dotenv/config');
 
 const app = express();
 
 //  Middlewares
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 //  Import Routes
 const postsRoute = require('./routes/posts');
@@ -19,12 +20,19 @@ app.get('/', (req, res) => {
 });
 
 //  Connect to db
-mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
-	console.log('db connected');
-});
+const connectToMongoDB = async () => {
+	await mongo().then(async (mongoose) => {
+		try {
+			console.log('Connected to mongoDB!');
+		} catch (err) {
+			console.log(err);
+		}
+	});
+};
+
+connectToMongoDB();
 
 //  Server Listen
-
 app.listen(3000, () => {
 	console.log('Server listening');
 });

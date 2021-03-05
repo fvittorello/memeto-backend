@@ -1,15 +1,25 @@
 const express = require('express');
 const router = express.Router();
-const Post = require('../models/Post');
+const mongo = require('../mongo');
+const postSchema = require('../models/Post');
 
 router.get('/', (req, res) => {
-	res.status(200).json({ data: 'Testing posts get response' });
+	mongo().then(async () => {
+		try {
+			const result = await postSchema.find({});
+			res.status(200).json(result);
+		} catch (err) {
+			console.log(err);
+		}
+	});
 });
 
 router.post('/', (req, res) => {
-	const post = new Post({
-		title: req.body.title,
-		description: req.body.description,
+	const { user, title, description } = req.body;
+	const post = new postSchema({
+		user,
+		title,
+		description,
 	});
 
 	post
