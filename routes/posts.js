@@ -15,16 +15,18 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-	const { user, title, description } = req.body;
+	const { user, title, description, image } = req.body;
 	const post = new postSchema({
 		user,
 		title,
 		description,
+		image,
 	});
 
 	post
 		.save()
 		.then((data) => {
+			console.log(data);
 			res.json(data);
 		})
 		.catch((error) => {

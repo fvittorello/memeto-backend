@@ -1,11 +1,14 @@
 const express = require('express');
 const mongo = require('./mongo');
+const cors = require('cors');
 require('dotenv/config');
 
 const app = express();
 
 //  Middlewares
-app.use(express.json());
+app.use(cors());
+app.options('*', cors());
+app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: false }));
 
 //  Import Routes
@@ -33,6 +36,6 @@ const connectToMongoDB = async () => {
 connectToMongoDB();
 
 //  Server Listen
-app.listen(3000, () => {
-	console.log('Server listening');
+app.listen(5000, () => {
+	console.log('Server listening on port 5000');
 });
